@@ -1,13 +1,16 @@
+using MediaPlayerApi.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -39,6 +42,12 @@ namespace MediaPlayerApi
             });
 
             services.AddControllers();
+
+            services.AddDbContext<MediaPlayerContext>(options => options.UseSqlServer("server=.\\sqlexpress;Trusted_Connection=True;Database=MediaPlayer"));
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Prometheus_API", Version = "v1" });
+            });
             // The cors policy definition
             services.AddCors(options => {
                 options.AddPolicy("cors", policy => {
@@ -54,6 +63,8 @@ namespace MediaPlayerApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Prometheus_API v1"));
             }
 
             app.UseRouting();
