@@ -4,7 +4,7 @@
     align-items: center;
     grid-gap: 8px;
     background: white;
-
+    padding: 8px 15px;
     grid-area: header;
 
 }
@@ -19,27 +19,38 @@
     height: var(--buttonwidth);
     background: transparent;
     border: none;
-    padding: 8px;
+
     cursor: pointer;
     opacity: var(--iconopacity);
-    width: 10px;
-    ;
 }
 
 
-.user_avatar img {
-    width: 100%;
-    height: 100%;
-}
+
 
 .user_avatar {
     opacity: 1 !important;
-
+    border: 3px solid black !important;
+    border-radius: 30px;
+    margin-left: 10px;
 }
 
 .top .logo {
     opacity: 1;
     width: 100px;
+}
+
+.top .logoImg {
+    opacity: 1;
+    height: 30px;
+
+    width: 130px;
+}
+
+i {
+    color: black;
+    font-size: 25px;
+    padding: 0px;
+
 }
 
 .search {
