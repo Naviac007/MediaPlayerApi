@@ -83,6 +83,7 @@ namespace MediaPlayerApi.Controllers
 
 
             Video video = videoData.Video;
+
             string finalPathReturn = String.Empty;
             try
             {
@@ -107,8 +108,32 @@ namespace MediaPlayerApi.Controllers
                 {
                     return BadRequest("The File is not received.");
                 }
+
                 video.VideoPath = finalPathReturn;
-                video.ThumbnailPath = string.Empty;
+               
+               
+                    postedFile = videoData.ThumbnailFile;
+                    uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles");
+                    if (postedFile.Length > 0)
+                    {
+                        // 3a. read the file name of the received file
+                        var fileName = ContentDispositionHeaderValue.Parse(postedFile.ContentDisposition)
+                            .FileName.Trim('"');
+
+                        // 3b. save the file on Path
+                        var finalPath = Path.Combine(uploadFolder, fileName);
+                        finalPathReturn = finalPath;
+                        using (var fileStream = new FileStream(finalPath, FileMode.Create))
+                        {
+                            postedFile.CopyTo(fileStream);
+                        }
+
+                    }
+                    else
+                    {
+                        return BadRequest("The File is not received.");
+                    }
+                    video.ThumbnailPath = finalPathReturn;
                 _context.Videos.Add(video);
                 await _context.SaveChangesAsync();
             }

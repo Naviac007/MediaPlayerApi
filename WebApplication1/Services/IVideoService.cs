@@ -11,5 +11,6 @@ namespace MediaPlayerApi.Services
     {
         public Video Video { get; set; }
         public IFormFile VideoFile { get; set; }
+        public IFormFile ThumbnailFile { get; set; }
     }
 }
