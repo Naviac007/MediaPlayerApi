@@ -44,6 +44,7 @@ namespace MediaPlayerApi
             services.AddControllers();
 
             services.AddDbContext<MediaPlayerContext>(options => options.UseSqlServer("server=.\\sqlexpress;Trusted_Connection=True;Database=MediaPlayer"));
+            services.AddScoped<JwtService>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Prometheus_API", Version = "v1" });
