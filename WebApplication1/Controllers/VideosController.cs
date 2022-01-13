@@ -44,6 +44,22 @@ namespace MediaPlayerApi.Controllers
             return video;
         }
 
+        [HttpGet("VideoBy/{id}")]
+        public async Task<ActionResult<IEnumerable<Video>>> GetVideoByUser(long id)
+        {
+            var videos = await _context.Videos.Where(x=>x.UserId==id).ToListAsync();
+
+            if (videos == null)
+            {
+                return NotFound();
+            }
+           
+               
+                return videos;
+        }
+
+        
+
         // PUT: api/Videos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -83,7 +99,17 @@ namespace MediaPlayerApi.Controllers
 
 
             Video video = videoData.Video;
-
+            Random random = new Random();
+            long num;
+            while (true)
+            {
+                num = random.Next(Int32.MaxValue);
+                if (_context.Videos.Find(num) is null)
+                {
+                    break;
+                }
+            }
+            video.VideoId = num;
             string finalPathReturn = String.Empty;
             try
             {

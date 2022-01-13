@@ -52,7 +52,7 @@ namespace MediaPlayerApi
             // The cors policy definition
             services.AddCors(options => {
                 options.AddPolicy("cors", policy => {
-                    policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                    policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().WithExposedHeaders("jwt");
                 });
                 options.AddPolicy("signalr",
                     builder => builder

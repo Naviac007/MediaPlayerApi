@@ -79,6 +79,23 @@ namespace MediaPlayerApi.Controllers
         public async Task<ActionResult<User>> PostUser(User user)
         {
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            User userCheck = _context.Users.Where(x => x.Email == user.Email).FirstOrDefault();
+            if(userCheck is not null)
+            {
+                return Conflict();
+            }
+            Random random = new Random();
+            long num;
+            while (true)
+            {
+                num = random.Next(Int32.MaxValue);
+                if(_context.Users.Find(num) is null)
+                {
+                    break;
+                }
+            }
+            user.UserId = num;
+
             _context.Users.Add(user);
             try
             {
@@ -127,11 +144,11 @@ namespace MediaPlayerApi.Controllers
             }
 
             var jwt = _jwtService.Generate((int)user.UserId);
-
-            Response.Cookies.Append(key: "jwt", value: jwt, new Microsoft.AspNetCore.Http.CookieOptions
-            {
-                HttpOnly = true
-            });
+            Response.Headers.Add("jwt", jwt);
+            //Response.Cookies.Append(key: "jwt", value: jwt, new Microsoft.AspNetCore.Http.CookieOptions
+            //{
+            //    HttpOnly = true
+            //});
             return Ok(new
             {
                 message = "success"
