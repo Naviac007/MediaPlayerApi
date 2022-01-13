@@ -138,6 +138,33 @@ namespace MediaPlayerApi.Controllers
 
             });
         }
+
+        [HttpGet(template: "verify")]
+        public IActionResult Verify()
+        {
+            try
+            {
+                var jwt = Request.Cookies["jwt"];
+                var token = _jwtService.Verify(jwt);
+                int UserId = int.Parse(token.Issuer);
+                User user = _context.Users.Where(x => x.UserId == UserId).FirstOrDefault();
+                return Ok(user);
+            }
+            catch (Exception _)
+            {
+                return Unauthorized();
+            }
+        }
+        [HttpPost(template: "Logout")]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete(key: "jwt");
+
+            return Ok(new
+            {
+                message = "success"
+            });
+        }
         private bool UserExists(long id)
         {
             return _context.Users.Any(e => e.UserId == id);

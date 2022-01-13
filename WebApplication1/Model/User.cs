@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 #nullable disable
 
@@ -19,8 +20,8 @@ namespace MediaPlayerApi.Model
         public string Email { get; set; }
         public string Password { get; set; }
 
-        public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<Like> Likes { get; set; }
-        public virtual ICollection<Video> Videos { get; set; }
+        [JsonIgnore]public virtual ICollection<Comment> Comments { get; set; }
+        [JsonIgnore] public virtual ICollection<Like> Likes { get; set; }
+        [JsonIgnore] public virtual ICollection<Video> Videos { get; set; }
     }
 }

@@ -54,6 +54,14 @@ namespace MediaPlayerApi
                 options.AddPolicy("cors", policy => {
                     policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                 });
+                options.AddPolicy("signalr",
+                    builder => builder
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+
+                    .AllowCredentials()
+                    .SetIsOriginAllowed(hostName => true));
+
             });
             // ends here
         }
