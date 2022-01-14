@@ -15,6 +15,7 @@ namespace MediaPlayerApi.Controllers
     {
         private readonly MediaPlayerContext _context;
         private readonly JwtService _jwtService;
+
         public UsersController(MediaPlayerContext context, JwtService jwtService)
         {
             _context = context;
@@ -145,6 +146,8 @@ namespace MediaPlayerApi.Controllers
 
             var jwt = _jwtService.Generate((int)user.UserId);
             Response.Headers.Add("jwt", jwt);
+            Response.Headers.Add("uname", user.Name);
+            Response.Headers.Add("uid",Convert.ToString( user.UserId));
             //Response.Cookies.Append(key: "jwt", value: jwt, new Microsoft.AspNetCore.Http.CookieOptions
             //{
             //    HttpOnly = true
@@ -157,19 +160,19 @@ namespace MediaPlayerApi.Controllers
         }
 
         [HttpGet(template: "verify")]
-        public IActionResult Verify()
+        public  User Verify(string jwt)
         {
             try
-            {
-                var jwt = Request.Cookies["jwt"];
+            {                
                 var token = _jwtService.Verify(jwt);
                 int UserId = int.Parse(token.Issuer);
                 User user = _context.Users.Where(x => x.UserId == UserId).FirstOrDefault();
-                return Ok(user);
+                if (user is null) return null;
+                return user;
             }
-            catch (Exception _)
+            catch (Exception)
             {
-                return Unauthorized();
+                return null;
             }
         }
         [HttpPost(template: "Logout")]

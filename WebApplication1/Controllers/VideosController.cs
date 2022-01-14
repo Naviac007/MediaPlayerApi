@@ -96,8 +96,13 @@ namespace MediaPlayerApi.Controllers
         [HttpPost, DisableRequestSizeLimit]
         public async Task<ActionResult<Video>> PostVideo([FromForm] VideoReceiver videoData)
         {
-
-
+            string jwt = Request.Headers["jwt"];
+            UsersController users = new UsersController(_context, new JwtService());
+            User user = users.Verify(jwt);
+            if(user is null)
+            {
+                return Unauthorized();
+            }
             Video video = videoData.Video;
             Random random = new Random();
             long num;
